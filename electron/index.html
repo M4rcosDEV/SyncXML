@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<title>Comparador</title>
+</head>
+
+<body>
+
+  <h1>Configuração da Aplicação</h1>
+
+  <!-- Modal da versão (Peguei no bootstrap) -->
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm"
+    onclick="tocarMusica()">Informações do app </button>
+  <audio id="audioPlayer" loop>
+    <source src="assets/musica.mp3" type="audio/mp3">
+    musica soft
+  </audio>
+
+
+
+  <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        Versao 1.0.2 <br>
+        Autor: Marcos Vinicius <br>
+        Sou bonito, gostoso, jogo bola e danço
+        <label for="porta"> Porta:
+          <input type="text" value="">
+        </label>
+        <button class="btn-mute" id="btn-mute">
+          <i class="fa-solid fa-volume-xmark" id="mute"></i>
+
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <form id="configForm">
+      <h2>Escolha uma opção</h2>
+      <select id="opcoes" class="form-control mb-3"></select>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="nomeBanco">Nome do Banco:</label>
+          <input type="text" class="form-control" id="nomeBanco" name="nomeBanco">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="senhaBanco">Senha do Banco:</label>
+          <input type="password" class="form-control" id="senhaBanco" name="senhaBanco">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="dataini">Data inicial:</label>
+          <input type="date" class="form-control" id="dataini" name="dataini">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="datafim">Data final:</label>
+          <input type="date" class="form-control" id="datafim" name="datafim">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="open-directory">Selecione um Diretório:</label>
+        <button type="button" id="open-directory" class="btn btn-secondary">Abrir Diretório</button>
+      </div>
+
+      <p id="directory-path">Caminho do diretório selecionado aparecerá aqui.</p>
+
+      <button type="submit" class="btn btn-primary">Comparar</button>
+    </form>
+  </div>
+  <!-- Daqui pra baixo só aparece depois que clica em comparar -->
+  <div class="mae container">
+    <pre id="totalXMLs">Total de XMLs: </pre>
+    <pre id="vlrnotas"></pre>
+    <pre id="vlrnotasxml"></pre>
+
+    <button class="fim" onclick="scrollToDiv()">Ir para o final</button>
+
+    <h2>Resultados XML</h2>
+    <div>
+      <pre id="resultados">Aguardando informar os dados...</pre>
+    </div>
+
+    <h2 id="notasnot">Notas que não tem XML</h2>
+    <pre id="numerosNaoPresentes">Aguardando informar os dados...</pre>
+
+    <!-- Modal de Notas sem XML -->
+    <div class="modal" tabindex="-1" role="dialog" id="myModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Nenhuma nota sem XML</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- link para JS, e bootstrap -->
+  <script src="renderer.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
