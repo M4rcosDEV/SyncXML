@@ -1,19 +1,19 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, shell } = require('electron');
 const path = require('path');
-const { processarDiretorioXML, obterNumerosDoBanco, verificarNumerosNaoPresentesEmXML, obterValorNotas} = require('../app');
+const { processarDiretorioXML, obterNumerosDoBanco, verificarNumerosNaoPresentesEmXML, obterValorNotas } = require('../app');
 const { setConfig } = require('../config/conexao');
 const { setDate } = require('../app');
 
 
 
 ipcMain.handle('open-directory-dialog', async () => {
-  const result = await dialog.showOpenDialog({
-      properties: ['openDirectory']
-  });
-  if (result.canceled) {
-      return null;
-  }
-  return result.filePaths[0];
+    const result = await dialog.showOpenDialog({
+        properties: ['openDirectory']
+    });
+    if (result.canceled) {
+        return null;
+    }
+    return result.filePaths[0];
 });
 
 let selectedDirectory = '';
@@ -30,62 +30,65 @@ let config = {};
 
 // Configurar IPC se necessário
 ipcMain.handle('enviar-config', async (event, newConfig) => {
-  if (!newConfig) {
-      console.error('Configuração não recebida ou é undefined');
-      throw new Error('Configuração não recebida');
-  }
+    if (!newConfig) {
+        console.error('Configuração não recebida ou é undefined');
+        throw new Error('Configuração não recebida');
+    }
 
-  try {
+    try {
 
-      config = newConfig; // Atualize a configuração
+        config = newConfig; // Atualize a configuração
 
-      // Atualize a configuração no módulo de conexão
-      setConfig(config);
-      setDate(config);
+        // Atualize a configuração no módulo de conexão
+        setConfig(config);
+        setDate(config);
 
-      const diretorioXML = selectedDirectory
+        const diretorioXML = selectedDirectory
 
-      // Exemplo de como você pode usar as configurações
-      console.log('Configurações recebidas:', config);
+        // Exemplo de como você pode usar as configurações
+        console.log('Configurações recebidas:', config);
 
-      // Processar os arquivos XML e verificar números
-      const resultados = await processarDiretorioXML(diretorioXML);
-      const numerosExtraidos = resultados.map(r => r.numeroExtraido);
-      const valoresExtraidos = resultados.map(r => r.valorExtraido);
-      const datasExtraidas = resultados.map(r => r.dataExtraida);
-      const numerosDoBanco = await obterNumerosDoBanco(config);
-      const valorNotas = await obterValorNotas(config);
-      const numerosNaoPresentes = await verificarNumerosNaoPresentesEmXML(numerosDoBanco, numerosExtraidos);
-      total = resultados.length;
+        // Processar os arquivos XML e verificar números
+        const resultados = await processarDiretorioXML(diretorioXML);
+        const numerosExtraidos = resultados.map(r => r.numeroExtraido);
+        const valoresExtraidos = resultados.map(r => r.valorExtraido);
+        const datasExtraidas = resultados.map(r => r.dataExtraida);
+        const numerosDoBanco = await obterNumerosDoBanco(config);
+        const valorNotas = await obterValorNotas(config);
+        const numerosNaoPresentes = await verificarNumerosNaoPresentesEmXML(numerosDoBanco, numerosExtraidos);
+        total = resultados.length;
 
-      
-      // Enviar a resposta de volta para o frontend
-      return {
-          resultados,
-          datasExtraidas,
-          valoresExtraidos,
-          numerosNaoPresentes,
-          valorNotas,
-          total
-      };
 
-  } catch (error) {
-      console.error('Erro ao processar configurações:', error);
-      throw error;
-  }
+        // Enviar a resposta de volta para o frontend
+        return {
+            resultados,
+            datasExtraidas,
+            valoresExtraidos,
+            numerosNaoPresentes,
+            valorNotas,
+            total
+        };
+
+    } catch (error) {
+        console.error('Erro ao processar configurações:', error);
+        throw error;
+    }
 });
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1280,
+        height: 720,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'), // Usar preload.js para segurança
             nodeIntegration: false,
             contextIsolation: true
-        }
+        },
+        icon: path.join(__dirname, 'img', 'pc.png'),
+        //autoHideMenuBar: true
     });
 
+    Menu.setApplicationMenu(Menu.buildFromTemplate(temp))
     win.loadFile(path.join(__dirname, 'index.html'));
 
     // Enviar uma mensagem ao frontend após carregar a janela
@@ -118,12 +121,13 @@ function createWindow() {
 
 
 app.whenReady().then(() => {
-    console.log("App is ready");
+    console.log("Tudo certo!!");
     createWindow();
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
+            sobreWindow();
         }
     });
 });
@@ -134,5 +138,55 @@ app.on('window-all-closed', () => {
     }
 });
 
+const sobreWindow = () => {
+    const sobre = new BrowserWindow({
+        width: 360,
+        height: 220,
+        resizable: false,
+        icon: path.join(__dirname, 'img', 'pc.png'),
+        autoHideMenuBar: true
+    })
 
+    sobre.loadFile(path.join(__dirname, 'views', 'sobre.html'));
 
+}
+
+const temp = [
+    {
+        label: 'Ferramentas',
+        submenu: [  //Config Zoom
+            {
+                label: 'Aplicar Zoom',
+                role: 'zoomIn',
+                accelerator: 'Ctrl+Z'
+            },
+            {
+                label: 'Diminuir Zoom',
+                role: 'zoomOut',
+                accelerator: 'Alt+Z'
+            },
+            {
+                label: 'Restaurar Zoom',
+                role: 'resetZoom',
+                accelerator: 'Ctrl + Alt + 0'
+            },
+            {
+                type: 'separator'
+            },
+            { //Sair da aplicação
+                label: 'Sair',
+                click: () => app.quit(),
+                accelerator: 'Esc'
+            }
+        ]
+    },
+    {
+        label: 'Sobre',
+        submenu: [
+            {
+                label: 'Informações do aplicativo',
+                click: () => sobreWindow()
+            }
+        ]
+    }
+]
