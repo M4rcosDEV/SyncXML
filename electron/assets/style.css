@@ -104,38 +104,9 @@ h3 {
     border-color: #545b62;
 }
 
-::-webkit-scrollbar {
-    width: 30px;
-    height: 1px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 7px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}::-webkit-scrollbar {
+::-webkit-scrollbar{
     width: 10px;
-    height: 10px;
 }
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
 
 .btn-mute {
     background-color: #007bff;
